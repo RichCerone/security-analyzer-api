@@ -4,7 +4,7 @@ const { Octokit } = require('@octokit/rest');
 
 // Initialize octokit.
 const octokit = new Octokit({
-    auth: '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'
+    auth: '{token}'
   });
 
 // Start express.
