@@ -6,7 +6,7 @@ const MyOcktokit = Octokit.plugin(throttling);
 
 // Initialize octokit.
 const octokit = new MyOcktokit({
-    auth: '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',
+    auth: '{token}',
     throttle: {
       onRateLimit: (retryAfter, options) => {
         octokit.log.warn(
