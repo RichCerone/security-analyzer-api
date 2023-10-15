@@ -1,10 +1,31 @@
 // Import required modules.
 const express = require('express');
 const { Octokit } = require('@octokit/rest');
+const { throttling } = require("@octokit/plugin-throttling");
+const MyOcktokit = Octokit.plugin(throttling);
 
 // Initialize octokit.
-const octokit = new Octokit({
-    auth: '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'
+const octokit = new MyOcktokit({
+    auth: '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',
+    throttle: {
+      onRateLimit: (retryAfter, options) => {
+        octokit.log.warn(
+          `Request quota exhausted for request ${options.method} ${options.url}`,
+        );
+  
+        // Retry twice after hitting a rate limit error, then give up
+        if (options.request.retryCount <= 2) {
+          console.log(`Retrying after ${retryAfter} seconds!`);
+          return true;
+        }
+      },
+      onSecondaryRateLimit: (retryAfter, options, octokit) => {
+        // does not retry, only logs a warning
+        octokit.log.warn(
+          `Secondary quota detected for request ${options.method} ${options.url}`,
+        );
+      },
+    }
   });
 
 // Start express.
